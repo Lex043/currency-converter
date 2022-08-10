@@ -8,7 +8,7 @@ const InputAmtandCurrency = () => {
     fetch(`https://${host}/currencies`)
       .then((response) => response.json())
       .then((data) => {
-        // console.log(data);
+        console.log(data);
         setCurrency(data);
       })
       .catch((error) => console.log(error));
@@ -16,16 +16,31 @@ const InputAmtandCurrency = () => {
 
   console.log(currency);
 
-  for (const key in currency) {
-    if (currency.hasOwnProperty(key)) {
-      console.log(`${key}`);
-    }
-  }
-
   return (
-    <div>
-      <form action=""></form>
-    </div>
+    <section>
+      <form action="">
+        <div>
+          <label>From</label>
+          <select name="" id="">
+            {Object.keys(currency).map((key, index) => (
+              <option key={index} value={key}>
+                {key}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label>To</label>
+          <select name="" id="">
+            {Object.keys(currency).map((key, index) => (
+              <option key={index} value={key}>
+                {key}
+              </option>
+            ))}
+          </select>
+        </div>
+      </form>
+    </section>
   );
 };
 
