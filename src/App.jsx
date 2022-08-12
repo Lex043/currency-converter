@@ -5,25 +5,6 @@ function App() {
   const [currency, setCurrency] = useState([]);
   const [text, setText] = useState("");
 
-  //
-  // const urls = [
-  //   `https://${host}/latest?amount=${text}&from=GBP&to=USD`,
-  //   `https://${host}/currencies`,
-  // ];
-
-  const fetchData = async () => {
-    try {
-      const response = await Promise.all(
-        urls.map((url) => fetch(url).then((res) => res.json()))
-      );
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  // fetchData();
-
   useEffect(() => {
     const host = "api.frankfurter.app";
     fetch(`https://${host}/currencies`)
@@ -36,7 +17,6 @@ function App() {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
         setCurrency(data);
       })
       .catch((err) => {

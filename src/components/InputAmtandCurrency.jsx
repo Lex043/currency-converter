@@ -4,37 +4,44 @@ const InputAmtandCurrency = ({ currency, text, setText }) => {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
 
+  const [respRates, setRespRates] = useState([]);
+  const [resp, setResp] = useState([]);
+
   const handleChange = (e) => {
     setText(e.target.value);
   };
 
   const handleFromChange = (e) => {
     setFrom(e.target.value);
-    console.log(e.target.value);
   };
 
   const handleToChange = (e) => {
     setTo(e.target.value);
-    console.log(e.target.value);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const host = "api.frankfurter.app";
+
       const response = await fetch(
         `https://${host}/latest?amount=${text}&from=${from}&to=${to}`
       );
       const data = await response.json();
+      setResp(data);
       console.log(data);
+      setRespRates(data.rates);
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
     }
   };
 
   return (
     <section>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4 sm:flex-row">
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col gap-4 sm:flex-row sm:items-end"
+      >
         <div className="flex flex-col">
           <label>Amount</label>
           <input
@@ -75,7 +82,28 @@ const InputAmtandCurrency = ({ currency, text, setText }) => {
             ))}
           </select>
         </div>
+
+        <button
+          type="submit"
+          className="border-2 border-current h-12 px-10 rounded-md outline-none"
+        >
+          Convert
+        </button>
       </form>
+
+      <div>
+        <h1>
+          {resp.amount} {resp.base}
+        </h1>
+      </div>
+
+      <div>
+        {Object.keys(respRates).map((key) => (
+          <p>
+            {respRates[key]} {key}
+          </p>
+        ))}
+      </div>
     </section>
   );
 };
