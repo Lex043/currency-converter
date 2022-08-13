@@ -3,9 +3,9 @@ import { useState } from "react";
 const InputAmtandCurrency = ({ currency, text, setText }) => {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
-
   const [respRates, setRespRates] = useState([]);
   const [resp, setResp] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (e) => {
     setText(e.target.value);
@@ -23,16 +23,16 @@ const InputAmtandCurrency = ({ currency, text, setText }) => {
     e.preventDefault();
     try {
       const host = "api.frankfurter.app";
-
       const response = await fetch(
         `https://${host}/latest?amount=${text}&from=${from}&to=${to}`
       );
       const data = await response.json();
       setResp(data);
-      console.log(data);
       setRespRates(data.rates);
+      setErrorMessage("");
     } catch (error) {
-      console.log(error.message);
+      setRespRates("");
+      setErrorMessage(error.message);
     }
   };
 
@@ -43,7 +43,7 @@ const InputAmtandCurrency = ({ currency, text, setText }) => {
         className="flex flex-col gap-4 sm:flex-row sm:items-end"
       >
         <div className="flex flex-col">
-          <label>Amount</label>
+          <label className="font-medium">Amount</label>
           <input
             type="text"
             value={text}
@@ -53,7 +53,7 @@ const InputAmtandCurrency = ({ currency, text, setText }) => {
         </div>
 
         <div className="flex flex-col">
-          <label>From</label>
+          <label className="font-medium">From</label>
           <select
             value={from}
             onChange={handleFromChange}
@@ -68,7 +68,7 @@ const InputAmtandCurrency = ({ currency, text, setText }) => {
           </select>
         </div>
         <div className="flex flex-col">
-          <label>To</label>
+          <label className="font-medium">To</label>
           <select
             value={to}
             onChange={handleToChange}
@@ -91,15 +91,10 @@ const InputAmtandCurrency = ({ currency, text, setText }) => {
         </button>
       </form>
 
-      <div>
-        <h1>
-          {resp.amount} {resp.base}
-        </h1>
-      </div>
-
-      <div>
-        {Object.keys(respRates).map((key) => (
-          <p>
+      <div className="pt-10 text-4xl text-center">
+        {errorMessage && <div>{errorMessage}</div>}
+        {Object.keys(respRates).map((key, index) => (
+          <p key={index}>
             {respRates[key]} {key}
           </p>
         ))}

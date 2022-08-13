@@ -25,7 +25,7 @@ function App() {
   }, [setCurrency, text]);
 
   return (
-    <div className="flex flex-col h-screen justify-center items-center">
+    <div className="flex flex-col h-screen justify-center items-center bg-[#ffe9d6]">
       <InputAmtandCurrency text={text} setText={setText} currency={currency} />
     </div>
   );
