@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useQuery } from "react-query";
 
-const InputAmtandCurrency = ({ currency, text, setText }) => {
+const InputAmtandCurrency = () => {
+  const [text, setText] = useState("");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [respRates, setRespRates] = useState([]);
@@ -36,6 +38,13 @@ const InputAmtandCurrency = ({ currency, text, setText }) => {
     }
   };
 
+  const host = "api.frankfurter.app";
+  const { error, data } = useQuery("currency", () =>
+    fetch(`https://${host}/currencies`).then((res) => res.json())
+  );
+
+  console.log(data);
+
   return (
     <section>
       <form
@@ -60,11 +69,12 @@ const InputAmtandCurrency = ({ currency, text, setText }) => {
             className="border-current border-2 h-12 w-full rounded-md outline-none"
           >
             <option value="">None</option>
-            {Object.keys(currency).map((key, index) => (
-              <option key={index} value={key}>
-                {key}- {currency[key]}
-              </option>
-            ))}
+            {data &&
+              Object.keys(data).map((key, index) => (
+                <option key={index} value={key}>
+                  {key}- {data[key]}
+                </option>
+              ))}
           </select>
         </div>
         <div className="flex flex-col">
@@ -75,11 +85,12 @@ const InputAmtandCurrency = ({ currency, text, setText }) => {
             className="border-current border-2 h-12 w-full rounded-md outline-none"
           >
             <option value="">None</option>
-            {Object.keys(currency).map((key, index) => (
-              <option key={index} value={key} onChange={handleFromChange}>
-                {key}- {currency[key]}
-              </option>
-            ))}
+            {data &&
+              Object.keys(data).map((key, index) => (
+                <option key={index} value={key} onChange={handleFromChange}>
+                  {key}- {data[key]}
+                </option>
+              ))}
           </select>
         </div>
 
@@ -93,11 +104,12 @@ const InputAmtandCurrency = ({ currency, text, setText }) => {
 
       <div className="pt-10 text-4xl text-center">
         {errorMessage && <div>{errorMessage}</div>}
-        {Object.keys(respRates).map((key, index) => (
-          <p key={index}>
-            {respRates[key]} {key}
-          </p>
-        ))}
+        {data &&
+          Object.keys(respRates).map((key, index) => (
+            <p key={index}>
+              {respRates[key]} {key}
+            </p>
+          ))}
       </div>
     </section>
   );
